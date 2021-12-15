@@ -4,3 +4,4 @@ insightface~=0.5
 torch
 torchvision
 pillow~=8.3.2
+onnxruntime
