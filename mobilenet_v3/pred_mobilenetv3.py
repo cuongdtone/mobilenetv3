@@ -20,6 +20,7 @@ class mobilenetv3:
     def load_model(self):
         self.model.load_state_dict(torch.load(self.weights, map_location=self.device))
     def preprocess_image(self, image):
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         img = Image.fromarray(image)
         # img = Image.open(i).convert('RGB')
         input_size = 112

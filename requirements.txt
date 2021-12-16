@@ -1,6 +1,8 @@
-opencv-python
-numpy
+numpy>=1.18.5
+scipy>=1.4.1
+PyQt5
+opencv-python-headless
 insightface~=0.5
-torch
-torchvision
+torch~=1.9.0
+torchvision~=0.10.0
 onnxruntime

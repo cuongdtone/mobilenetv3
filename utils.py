@@ -17,30 +17,38 @@ class Face_Mask():
         self.face = Face_Detection(model_face)
         self.classifier = mobilenetv3(model_mask)
     def get(self, image):
+        h, w = image.shape[:2]
         boxes = self.face.get(image)
+        bboxes = []
         labels = []
         for box in boxes:
-            face = image[box[1]: box[3], box[0]:box[2], :]
-            cv2.imshow('face', face)
-            cv2.waitKey(5)
-            #classification
-            pred = self.classifier.predict(face)
-            if pred==1:
-                label = 'Khong deo khau trang'
-            elif pred==0:
-                label = 'Co khau trang'
-            labels.append(label)
-        return boxes, labels
+            if box[1]>0 and box[3]<h and box[0]>0 and box[2]<w:
+                face = image[box[1]: box[3], box[0]:box[2], :]
+                #cv2.imshow('face', face)
+                #cv2.waitKey(5)
+                #classification
+                pred = self.classifier.predict(face)
+                if pred==1:
+                    label = 'Khong deo khau trang'
+                elif pred==0:
+                    label = 'Co khau trang'
+                labels.append(label)
+                bboxes.append(box)
+        return bboxes, labels
 
 def draw(image, boxes, labels):
     if len(labels)>0:
         for idx, box in enumerate(boxes):
-            cv2.rectangle(image, (box[0], box[1]), (box[2], box[3]), (0, 0, 255), 1)
+            if labels[idx] == 'Khong deo khau trang':
+                color = (255,0,0)
+            else:
+                color = (0, 0, 255)
+            cv2.rectangle(image, (box[0], box[1]), (box[2], box[3]), color, 2)
             cv2.putText(image,
                         labels[idx], (box[0], box[3]),
                         fontFace=cv2.FONT_HERSHEY_PLAIN,
                         thickness=2,
                         fontScale=1,
-                        color=(0, 255, 255)
+                        color=(0,255,255)
                         )
     return image
